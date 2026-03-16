@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spaceflamingo</title>
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <style>
+      #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0b0f1a 0%, #1a1f3a 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      
+      #splash-screen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .splash-content {
+        text-align: center;
+        max-width: 800px;
+        width: min(100vw, 800px);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        justify-content: space-between;
+        box-sizing: border-box;
+      }
+      
+      .splash-header {
+        padding-top: 40px;
+      }
+      
+      .splash-title {
+        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-size: 4rem;
+        color: #ff1493;
+        text-shadow: 0 0 20px rgba(255, 20, 147, 0.8),
+                     0 0 40px rgba(255, 20, 147, 0.4);
+        margin: 0 0 20px 0;
+        letter-spacing: 4px;
+        animation: glow 2s ease-in-out infinite;
+      }
+      
+      .splash-tagline {
+        font-family: 'Courier New', monospace;
+        font-size: 1.5rem;
+        color: #e6e6e6;
+        margin: 0;
+        font-style: italic;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+      
+      .splash-middle {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      #splash-canvas {
+        width: min(64vmin, 600px);
+        height: min(64vmin, 600px);
+      }
+      
+      .splash-footer {
+        padding-bottom: 40px;
+      }
+
+      @media (max-width: 900px), (orientation: portrait) {
+        .splash-content {
+          padding: calc(10px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom));
+          height: 100dvh;
+          justify-content: space-around;
+          gap: 10px;
+        }
+
+        .splash-header {
+          padding-top: 8px;
+        }
+
+        .splash-title {
+          font-size: clamp(1.9rem, 8vw, 3rem);
+          letter-spacing: 2px;
+          margin-bottom: 10px;
+        }
+
+        .splash-tagline {
+          font-size: clamp(0.95rem, 4vw, 1.25rem);
+        }
+
+        #splash-canvas {
+          width: min(78vw, 54dvh, 420px);
+          height: min(78vw, 54dvh, 420px);
+        }
+
+        .splash-footer {
+          padding-bottom: 4px;
+        }
+
+        .loading-bar {
+          width: min(72vw, 320px);
+        }
+
+        .loading-text {
+          font-size: 1rem;
+          margin-top: 12px;
+        }
+
+        .credits {
+          margin-top: 16px;
+          font-size: 0.82rem;
+          line-height: 1.45;
+        }
+
+        .credits-license {
+          margin-top: 6px;
+          font-size: 0.72rem;
+        }
+      }
+      
+      .loading-text {
+        font-family: system-ui, sans-serif;
+        font-size: 1.2rem;
+        color: #aaa;
+        margin-top: 20px;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      
+      .credits {
+        font-family: system-ui, sans-serif;
+        font-size: 0.9rem;
+        color: #999;
+        margin-top: 30px;
+        line-height: 1.6;
+      }
+      
+      .credits-dev {
+        font-weight: bold;
+        color: #ff1493;
+      }
+      
+      .credits-license {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: #777;
+      }
+      
+      .loading-bar {
+        width: 300px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 10px auto;
+      }
+      
+      .loading-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #ff1493, #ff69b4);
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
+      }
+      
+      @keyframes glow {
+        0%, 100% { text-shadow: 0 0 20px rgba(255, 20, 147, 0.8), 0 0 40px rgba(255, 20, 147, 0.4); }
+        50% { text-shadow: 0 0 30px rgba(255, 20, 147, 1), 0 0 60px rgba(255, 20, 147, 0.6); }
+      }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash-screen">
+      <div class="splash-content">
+        <div class="splash-header">
+          <h1 class="splash-title">SPACEFLAMINGO</h1>
+          <p class="splash-tagline">"You can't scare me to death."</p>
+        </div>
+        <div class="splash-middle">
+          <canvas id="splash-canvas"></canvas>
+        </div>
+        <div class="splash-footer">
+          <div class="loading-bar">
+            <div class="loading-progress" id="loading-progress"></div>
+          </div>
+          <p class="loading-text" id="loading-text">Loading...</p>
+          <div class="credits">
+            <div>Created by <span class="credits-dev">Juhku</span></div>
+            <div>Astronaut by Quaternius</div>
+            <div class="credits-license">Open Source - MIT License</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="app"></div>
+    <script type="module" src="/src/splash.ts"></script>
+  </body>
+</html>
