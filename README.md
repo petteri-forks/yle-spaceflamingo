@@ -1,3 +1,12 @@
+# Taustaa
+
+YLE:n artikkeli 16.3.2026, Juha-Matti Mäntylä
+
+Viekö tekoäly koodareilta työt? Vaihdoin AI-agentin kanssa 50 viestiä – ja tällaisen pelin se pyöräytti
+Ohjelmointi­professorin mukaan tekoälyagentti tekee kahdessa minuutissa kahden viikon työt.
+
+https://yle.fi/a/74-20214345
+
 # spaceflamingo
 
 Nopea Three.js + TypeScript -pohja selaimessa pyörivälle 3D-pelille.
